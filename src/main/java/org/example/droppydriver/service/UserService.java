@@ -29,8 +29,6 @@ public class UserService implements IUserService {
     @Override
     public User registerUser(CreateUserRequest request) throws CreateUserException {
 
-        //var passwordErrors = new ArrayList<PasswordError>();
-
         if (request.getEmail() == null || request.getEmail().isBlank() || !request.getEmail().contains("@")) {
             throw new InvalidEmailException("Invalid email");
         }
@@ -72,8 +70,6 @@ public class UserService implements IUserService {
 
         return user;
     }
-
-
 
     @Override
     public Stream<UserResponse> findAllUsers() {

@@ -31,8 +31,10 @@ public class FolderResponse {
                 folder.getId(),
                 folder.getName(),
                 folder.getCreatedAt(),
-                folder.getFiles().stream()
-                        .map(FileResponse::fromModel).toList()
+                folder.getFiles()
+                        .stream()
+                        .map(FileResponse::fromModel)
+                        .toList()
         );
     }
 

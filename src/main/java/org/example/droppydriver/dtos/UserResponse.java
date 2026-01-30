@@ -36,7 +36,8 @@ public class UserResponse {
                 user.getCreatedAt(),
                 user.getEmail(),
                 user.getAge(),
-                user.getFolders().stream()
+                user.getFolders()
+                        .stream()
                         .map(FolderResponse::fromModel)
                         .toList()
         );
