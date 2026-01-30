@@ -1,32 +1,38 @@
 package org.example.droppydriver.dtos;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.example.droppydriver.models.FileModel;
 import org.example.droppydriver.models.Folder;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Stream;
 
 @Getter
 @Setter
-@AllArgsConstructor
+@NoArgsConstructor
 public class FolderResponse {
 
-    private final UUID id;
+    private UUID id;
     private String folderName;
     private Date createdAt;
-    private List<FileModel> files;
+    private List<FileResponse> files;
+
+    public FolderResponse(UUID id, String folderName, Date createdAt, List<FileResponse> files) {
+        this.id = id;
+        this.folderName = folderName;
+        this.createdAt = createdAt;
+        this.files = files;
+    }
 
     public static FolderResponse fromModel(Folder folder) {
         return new FolderResponse(
                 folder.getId(),
                 folder.getName(),
                 folder.getCreatedAt(),
-                folder.getFiles()
+                folder.getFiles().stream()
+                        .map(FileResponse::fromModel).toList()
         );
     }
 

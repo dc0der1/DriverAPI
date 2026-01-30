@@ -5,4 +5,5 @@ import org.example.droppydriver.models.Folder;
 
 public interface IFolderService {
     Folder createFolder(CreateFolderRequest folder);
+    Folder findFolderByName(String folderName);
 }

@@ -5,15 +5,13 @@ import lombok.extern.slf4j.Slf4j;
 import org.example.droppydriver.dtos.CreateFolderRequest;
 import org.example.droppydriver.dtos.FolderResponse;
 import org.example.droppydriver.exceptions.folderexceptions.FolderAlreadyExistException;
+import org.example.droppydriver.exceptions.folderexceptions.NoSuchFolderException;
 import org.example.droppydriver.exceptions.userexceptions.InvalidEmailException;
 import org.example.droppydriver.exceptions.userexceptions.InvalidPasswordException;
 import org.example.droppydriver.models.Folder;
 import org.example.droppydriver.service.IFolderService;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Map;
@@ -31,7 +29,6 @@ public class FolderController {
         try {
             var folder = folderService.createFolder(request);
             return ResponseEntity.created(URI.create("/droppydriver/folder")).body(FolderResponse.fromModel(folder));
-
         } catch (FolderAlreadyExistException | InvalidPasswordException | InvalidEmailException e) {
             return ResponseEntity
                     .badRequest()
@@ -42,6 +39,21 @@ public class FolderController {
             log.error("Error while creating folder", e);
             return ResponseEntity
                     .badRequest()
+                    .build();
+        }
+    }
+
+    @GetMapping("/{name}")
+    public ResponseEntity<?> getFolder(@PathVariable String name) {
+        try {
+            var folder = folderService.findFolderByName(name);
+            return ResponseEntity.ok(FolderResponse.fromModel(folder));
+        } catch (NoSuchFolderException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            log.error("Error while getting folder", e);
+            return  ResponseEntity
+                    .internalServerError()
                     .build();
         }
     }

@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcType;
+import org.hibernate.type.descriptor.jdbc.BinaryJdbcType;
 
 import java.util.UUID;
 
@@ -21,7 +23,7 @@ public class FileModel {
     private String contentType;
     private Long size;
 
-    @Lob
+    @JdbcType(BinaryJdbcType.class)
     @Column(name = "content", columnDefinition = "BYTEA")
     private byte[] data;
 

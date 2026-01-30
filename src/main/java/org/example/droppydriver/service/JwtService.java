@@ -19,7 +19,7 @@ public class JwtService {
         return JWT.create()
                 .withIssuer("DroppyDriver")
                 .withIssuedAt(Instant.now())
-                .withExpiresAt(Instant.now().plus(60, ChronoUnit.MINUTES))
+                .withExpiresAt(Instant.now().plus(8, ChronoUnit.HOURS))
                 .withSubject(userId.toString())
                 .sign(algorithm);
     }
