@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.example.droppydriver.dtos.FileResponse;
-import org.example.droppydriver.dtos.FolderResponse;
-import org.springframework.boot.webmvc.autoconfigure.WebMvcProperties;
 
 import java.util.*;
 

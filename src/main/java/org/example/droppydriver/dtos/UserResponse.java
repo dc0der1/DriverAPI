@@ -2,13 +2,11 @@ package org.example.droppydriver.dtos;
 
 import lombok.Getter;
 import lombok.Setter;
-import org.example.droppydriver.models.Folder;
 import org.example.droppydriver.models.User;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Stream;
 
 @Getter
 @Setter

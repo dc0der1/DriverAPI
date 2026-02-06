@@ -19,19 +19,24 @@ public class User implements UserDetails {
 
     private String username;
     private String password;
+
+    @Column(unique = true, nullable = false)
     private String email;
     private int age;
+
+    @Column(name = "created_at", updatable = false)
     private Date createdAt;
 
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    public User(String username, String password, String email, int age) {
+    public User(String username, String password, String email, int age, Role role) {
         this.username = username;
         this.password = password;
         this.email = email;
         this.age = age;
         this.createdAt = new Date();
+        this.role = role;
     }
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -40,6 +45,18 @@ public class User implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return List.of(new SimpleGrantedAuthority("ROLE_" + this.role.name().toUpperCase()));
     }
+
+    @Override
+    public boolean isAccountNonExpired() { return true; }
+
+    @Override
+    public boolean isAccountNonLocked() { return true; }
+
+    @Override
+    public boolean isCredentialsNonExpired() { return true; }
+
+    @Override
+    public boolean isEnabled() { return true; }
 }

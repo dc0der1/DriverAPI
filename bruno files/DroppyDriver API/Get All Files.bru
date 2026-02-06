@@ -1,0 +1,15 @@
+meta {
+  name: Get All Files
+  type: http
+  seq: 10
+}
+
+get {
+  url: http://localhost:8080/droppydriver/file/all
+  body: none
+  auth: inherit
+}
+
+settings {
+  encodeUrl: true
+}

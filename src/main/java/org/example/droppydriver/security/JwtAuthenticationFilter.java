@@ -1,4 +1,4 @@
-package org.example.droppydriver.config;
+package org.example.droppydriver.security;
 
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import jakarta.servlet.FilterChain;
@@ -9,12 +9,13 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.example.droppydriver.models.User;
 import org.example.droppydriver.repository.IUserRepository;
-import org.example.droppydriver.service.JwtService;
+import org.example.droppydriver.service.IJwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.swing.text.html.Option;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Optional;
@@ -23,7 +24,7 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
-    private final JwtService jwtService;
+    private final IJwtService jwtService;
     private final IUserRepository userRepository;
 
     @Override
@@ -54,12 +55,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        User user = userOptional.get();
-        SecurityContextHolder
-                .getContext()
-                .setAuthentication(new UsernamePasswordAuthenticationToken(
-                        user, user.getPassword(), new ArrayList<>()
-                ));
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                userOptional.get(),
+                null, // Password isn't needed once authenticated
+                userOptional.get().getAuthorities() // This pulls the ROLE_ADMIN/ROLE_USER we set up
+        );
+
+        // Link details (like IP address/session) to the authentication object
+        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+        SecurityContext context = SecurityContextHolder.createEmptyContext();
+        context.setAuthentication(authentication);
+        SecurityContextHolder.setContext(context);
+
         filterChain.doFilter(request, response);
     }
 }

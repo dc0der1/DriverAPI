@@ -8,13 +8,14 @@ import org.example.droppydriver.exceptions.folderexceptions.FolderAlreadyExistEx
 import org.example.droppydriver.exceptions.folderexceptions.NoSuchFolderException;
 import org.example.droppydriver.exceptions.userexceptions.InvalidEmailException;
 import org.example.droppydriver.exceptions.userexceptions.InvalidPasswordException;
-import org.example.droppydriver.models.Folder;
+import org.example.droppydriver.exceptions.userexceptions.UserNotFoundException;
 import org.example.droppydriver.service.IFolderService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/droppydriver/folder")
@@ -29,7 +30,7 @@ public class FolderController {
         try {
             var folder = folderService.createFolder(request);
             return ResponseEntity.created(URI.create("/droppydriver/folder")).body(FolderResponse.fromModel(folder));
-        } catch (FolderAlreadyExistException | InvalidPasswordException | InvalidEmailException e) {
+        } catch (FolderAlreadyExistException | InvalidPasswordException | UserNotFoundException | InvalidEmailException e) {
             return ResponseEntity
                     .badRequest()
                     .body(Map.of(
@@ -43,19 +44,39 @@ public class FolderController {
         }
     }
 
-    @GetMapping("/{name}")
-    public ResponseEntity<?> getFolder(@PathVariable String name) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getFolder(@PathVariable UUID id) {
         try {
-            var folder = folderService.findFolderByName(name);
+            var folder = folderService.findFolderById(id);
             return ResponseEntity.ok(FolderResponse.fromModel(folder));
         } catch (NoSuchFolderException e) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity
+                    .notFound()
+                    .build();
         } catch (Exception e) {
             log.error("Error while getting folder", e);
-            return  ResponseEntity
+            return ResponseEntity
                     .internalServerError()
                     .build();
         }
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<?> getAllFolders() {
+        try {
+            var folders = folderService.findAllFolders();
+            return ResponseEntity.ok().body(folders.stream().map(FolderResponse::fromModel).toList());
+        } catch (NoSuchFolderException e) {
+            return ResponseEntity
+                    .notFound()
+                    .build();
+        } catch (Exception e) {
+            log.error("Error while getting folders", e);
+            return ResponseEntity
+                    .internalServerError()
+                    .build();
+        }
+
     }
 
 }

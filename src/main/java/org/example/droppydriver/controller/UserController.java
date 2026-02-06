@@ -8,10 +8,12 @@ import org.example.droppydriver.dtos.UserResponse;
 import org.example.droppydriver.exceptions.userexceptions.*;
 import org.example.droppydriver.service.IUserService;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.URI;
 import java.util.Map;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -89,6 +91,7 @@ public class UserController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> getAllUsers() {
         try {
             return ResponseEntity.ok(userService.findAllUsers());
@@ -109,9 +112,10 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUserById(@PathVariable String id) {
+    @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
+    public ResponseEntity<?> getUserById(@PathVariable UUID id) {
         try {
-            return ResponseEntity.ok(userService.findUserById(id));
+            return ResponseEntity.ok(userService.findUserById(id.toString()));
         } catch (NoUsersException | IllegalArgumentException exception) {
             return ResponseEntity
                     .badRequest()

@@ -4,10 +4,13 @@ import org.example.droppydriver.models.Folder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
 @Repository
 public interface IFolderRepository extends JpaRepository<Folder, UUID> {
     Optional<Folder> findFolderByName(String name);
+    Optional<Folder> findFolderByIdAndUserEmail(UUID id, String email);
+    List<Folder> findAllFoldersByUserEmail(String email);
 }

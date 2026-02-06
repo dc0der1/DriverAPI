@@ -5,8 +5,6 @@ import org.example.droppydriver.dtos.LoginUserRequest;
 import org.example.droppydriver.dtos.UserResponse;
 import org.example.droppydriver.models.User;
 
-import java.util.List;
-import java.util.UUID;
 import java.util.stream.Stream;
 
 public interface IUserService {
