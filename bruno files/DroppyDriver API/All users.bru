@@ -5,11 +5,16 @@ meta {
 }
 
 get {
-  url: http://localhost:8080/droppydriver/all
+  url: http://localhost:8080/droppydriver/user/all
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZGEwZjMzNy0xZTk1LTQ1OTEtYWZjOS1iMWJiMmFiMGJhMWEiLCJyb2xlcyI6WyJST0xFX0FETUlOIl0sImlhdCI6MTc3MjExMzI4NCwiZXhwIjoxNzcyMTIxNzQ0fQ.BPKu3-hv83TEnjtUax1TX05U19U2Ze2jlw8RRf3rUvU
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

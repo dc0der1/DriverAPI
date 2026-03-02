@@ -20,6 +20,9 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
+    private String oidcId;
+    private String oidcProvider;
+
     @Column(unique = true, nullable = false)
     private String email;
     private int age;

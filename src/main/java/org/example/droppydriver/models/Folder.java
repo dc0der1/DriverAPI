@@ -3,7 +3,9 @@ package org.example.droppydriver.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 import lombok.Setter;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.*;
 

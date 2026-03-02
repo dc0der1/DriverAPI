@@ -8,6 +8,6 @@ import java.util.UUID;
 
 public interface IFolderService {
     Folder createFolder(CreateFolderRequest folder);
-    Folder findFolderById(UUID folder_id);
+    Folder findFolderByName(String folderName);
     List<Folder> findAllFolders();
 }

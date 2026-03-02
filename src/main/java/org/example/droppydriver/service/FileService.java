@@ -11,14 +11,12 @@ import org.example.droppydriver.repository.IFileRepository;
 import org.example.droppydriver.repository.IFolderRepository;
 import org.example.droppydriver.repository.IUserRepository;
 import org.example.droppydriver.utility.AuthUtility;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.nio.file.NoSuchFileException;
 import java.util.List;
-import java.util.Objects;
 
 @Service
 @RequiredArgsConstructor
@@ -42,32 +40,21 @@ public class FileService implements IFileService {
      * @throws NoSuchFolderException if the given folder name doesn't exist
      */
     public void uploadFile(MultipartFile file, String folderName) throws IOException {
-
         if (file.isEmpty()) {
             throw new IllegalArgumentException("Cannot upload empty file");
         }
 
-        if (fileRepository.findFileByName(file.getOriginalFilename()).isPresent()) {
+        if (fileRepository.findFileModelByNameAndUserEmail(file.getOriginalFilename() ,AuthUtility.currentUser()).isPresent()) {
             throw new FileAlreadyExistsException("File already exists");
         }
 
-        if (folderRepository.findFolderByName(folderName).isEmpty()) {
-            throw new NoSuchFolderException("Folder " + folderName + " does not exist");
-        }
-
-        String email = "";
-        var auth = Objects.requireNonNull(SecurityContextHolder.getContext().getAuthentication());
-        if (auth.getPrincipal() instanceof User userDetails) {
-            email = userDetails.getEmail();
-        }
-
-        if (!fileRepository.existsByNameAndUserEmail(email, folderName)) {
+        if (!folderRepository.existsByNameAndUserEmail(AuthUtility.currentUser(), folderName)) {
             throw new NoSuchFolderException("Folder " + folderName + " does not exist on this account");
         }
 
-        User user = userRepository.findUserByEmail(email);
+        User user = userRepository.findUserByEmail(AuthUtility.currentUser());
 
-        Folder folder = folderRepository.findFolderByName(folderName).get();
+        Folder folder = folderRepository.findFolderByNameAndUserEmail(folderName, AuthUtility.currentUser()).get();
 
         FileModel fileModel =  new FileModel();
         fileModel.setName(file.getOriginalFilename());

@@ -39,12 +39,11 @@ public class FolderService implements IFolderService {
     @Override
     @Transactional
     public Folder createFolder(CreateFolderRequest request) {
-
-        if (folderRepository.findFolderByName(request.getFolderName()).isPresent()) {
+        if (folderRepository.existsByNameAndUserEmail(AuthUtility.currentUser(), request.getFolderName())) {
             throw new FolderAlreadyExistException("Folder name already exists");
         }
 
-        User user = userRepository.findUserByEmail(AuthUtility.currentUser());
+        var user = userRepository.findUserByEmail(AuthUtility.currentUser());
 
         if (user == null) {
             throw new UserNotFoundException("Authenticated user not found");
@@ -61,14 +60,13 @@ public class FolderService implements IFolderService {
      * This method validates that the folder does exist within the authenticated account.
      * </p>
      *
-     * @param folder_id the UUID containing desired id
+     * @param folderName the String containing desired name
      * @return the found {@link Folder} entity
      * @throws NoSuchFolderException if the folder is not found in the account
      */
     @Override
-    public Folder findFolderById(UUID folder_id) {
-
-        return folderRepository.findFolderByIdAndUserEmail(folder_id, AuthUtility.currentUser())
+    public Folder findFolderByName(String folderName) {
+        return folderRepository.findFolderByNameAndUserEmail(folderName, AuthUtility.currentUser())
                 .orElseThrow(() -> new NoSuchFolderException("Folder not found"));
     }
 

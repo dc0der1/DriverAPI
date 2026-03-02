@@ -13,6 +13,8 @@ import org.example.droppydriver.repository.IUserRepository;
 import org.example.droppydriver.utility.ValidationUtils;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Stream;
 
@@ -95,13 +97,13 @@ public class UserService implements IUserService {
      */
     @Override
     public Stream<UserResponse> findAllUsers() {
+        var users = userRepository.findAll();
 
-        if (userRepository.findAll().isEmpty()) {
+        if (users.isEmpty()) {
             throw new NoUsersException("No users found");
         }
 
-        return userRepository.findAll()
-                .stream()
+        return users.stream()
                 .map(UserResponse::fromModel);
     }
 
@@ -112,20 +114,22 @@ public class UserService implements IUserService {
      * </p>
      *
      * @return UserResponse DTO with ID, username, email, list of folders and files
-     * @throws NoUsersException if the user doesn't exist
+     * @throws UserNotFoundException if the user doesn't exist
      * @throws IllegalArgumentException if the UUID is invalid*/
     @Override
-    public UserResponse findUserById(String id) throws GetUserException {
+    public User findUserById(String id) throws GetUserException {
 
-        if (userRepository.findById(UUID.fromString(id)).isEmpty()) {
-            throw new NoUsersException("No user found with id: " + id);
+        Optional<User> user = userRepository.findById(UUID.fromString(id));
+
+        if (user.isEmpty()) {
+            throw new UserNotFoundException("No user found with id: " + id);
         }
 
         if (!ValidationUtils.isValidUUID(id)) {
             throw new IllegalArgumentException("Invalid user id: " + id);
         }
 
-        return UserResponse.fromModel(userRepository.findById(UUID.fromString(id)).get());
+        return user.get();
     }
 
     /**
@@ -142,11 +146,12 @@ public class UserService implements IUserService {
     @Override
     public String signInUser(LoginUserRequest request) {
 
-        if (!userRepository.existsUserByEmail(request.getEmail())) {
+        var user = userRepository.findUserByEmail(request.getEmail());
+
+        if (user == null) {
             throw new InvalidLoginException("Invalid email or password");
         }
 
-        var user = userRepository.findUserByEmail(request.getEmail());
         assert user.getPassword() != null;
         BCrypt.Result result = BCrypt.verifyer().verify(
                 request.getPassword().toCharArray(),
@@ -158,5 +163,29 @@ public class UserService implements IUserService {
         }
 
         return jwtService.generateToken(user);
+    }
+
+    @Override
+    public Optional<User> getUserByOidc(String oidcId, String oidcProvider) {
+        return userRepository.findByOidcIdAndOidcProvider(oidcId, oidcProvider);
+    }
+
+    @Override
+    public User createOidcUser(String email, String oidcId, String oidcProvider) {
+        if (userRepository.findUserByEmail(email) != null) {
+            throw new UserAlreadyExistsException("User already exists");
+        }
+
+        var user = new User();
+        user.setEmail(email);
+        user.setPassword(null);
+        user.setOidcId(oidcId);
+        user.setOidcProvider(oidcProvider);
+        user.setRole(Role.USER);
+
+        userRepository.save(user);
+        log.info("User {} has been created", user.getUsername());
+
+        return user;
     }
 }

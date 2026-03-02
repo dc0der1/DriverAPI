@@ -97,10 +97,8 @@ public class UserController {
             return ResponseEntity.ok(userService.findAllUsers());
         } catch (NoUsersException exception) {
             return ResponseEntity
-                    .badRequest()
-                    .body(Map.of(
-                            "error", exception.getMessage()
-                    ));
+                    .notFound()
+                    .build();
         } catch (Exception exception) {
             log.error("Error while getting users", exception);
             return ResponseEntity
@@ -115,8 +113,9 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN') or #id == authentication.principal.id")
     public ResponseEntity<?> getUserById(@PathVariable UUID id) {
         try {
-            return ResponseEntity.ok(userService.findUserById(id.toString()));
-        } catch (NoUsersException | IllegalArgumentException exception) {
+            var user = userService.findUserById(id.toString());
+            return ResponseEntity.ok(UserResponse.fromModel(user));
+        } catch (UserNotFoundException | IllegalArgumentException exception) {
             return ResponseEntity
                     .badRequest()
                     .body(Map.of(

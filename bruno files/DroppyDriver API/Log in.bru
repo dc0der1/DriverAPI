@@ -6,10 +6,18 @@ meta {
 
 post {
   url: http://localhost:8080/droppydriver/user/login
-  body: none
+  body: json
   auth: inherit
+}
+
+body:json {
+  {
+    "email": "helloworld@gmail.com", 
+    "password": "Linkur123@"
+  }
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

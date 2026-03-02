@@ -7,9 +7,14 @@ meta {
 get {
   url: http://localhost:8080/droppydriver/file/all
   body: none
-  auth: inherit
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJjYmE1N2FkMy0wMDYwLTQ2NWYtYjBjOC1mZmZiNjIwYjU2MDkiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNzcxOTQ3MjQ1LCJleHAiOjE3NzE5NTU3MDV9.4cnTbMV4xjcbhNaXzCksSr785R0jTKgDLwG8HVkLl1o
 }
 
 settings {
   encodeUrl: true
+  timeout: 0
 }

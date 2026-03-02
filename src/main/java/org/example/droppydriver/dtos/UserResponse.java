@@ -1,16 +1,22 @@
 package org.example.droppydriver.dtos;
 
 import lombok.Getter;
+import lombok.NonNull;
 import lombok.Setter;
+import org.example.droppydriver.controller.UserController;
 import org.example.droppydriver.models.User;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @Getter
 @Setter
-public class UserResponse {
+public class UserResponse extends RepresentationModel<@NonNull UserResponse> {
 
     private final UUID id;
     private String username;
@@ -29,7 +35,7 @@ public class UserResponse {
     }
 
     public static UserResponse fromModel(User user) {
-        return new UserResponse(user.getId(),
+        var response = new UserResponse(user.getId(),
                 user.getUsername(),
                 user.getCreatedAt(),
                 user.getEmail(),
@@ -39,6 +45,13 @@ public class UserResponse {
                         .map(FolderResponse::fromModel)
                         .toList()
         );
+
+        response.add(linkTo(
+                methodOn(UserController.class).getUserById(user.getId()))
+                .withRel("user")
+        );
+
+        return response;
     }
 
 }

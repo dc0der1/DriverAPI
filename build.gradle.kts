@@ -25,8 +25,8 @@ repositories {
 }
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-jdbc")
-    implementation("org.springframework.boot:spring-boot-starter-restclient")
+    //implementation("org.springframework.boot:spring-boot-starter-jdbc")
+    //implementation("org.springframework.boot:spring-boot-starter-restclient")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.auth0:java-jwt:4.4.0")
     implementation("io.jsonwebtoken:jjwt-api:0.13.0")
@@ -34,9 +34,10 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-jackson:0.13.0")
     implementation("at.favre.lib:bcrypt:0.10.2")
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
-    implementation("jakarta.persistence:jakarta.persistence-api:3.2.0")
-    implementation("org.springframework.data:spring-data-jpa:4.0.2")
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+    implementation("org.springframework.boot:spring-boot-starter-security-oauth2-client")
+    implementation("org.springframework.boot:spring-boot-starter-hateoas")
+    implementation("org.springframework.boot:spring-boot-starter-webflux")
     compileOnly("org.projectlombok:lombok")
     runtimeOnly("org.postgresql:postgresql")
     annotationProcessor("org.projectlombok:lombok")
@@ -44,6 +45,7 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-restclient-test")
     testImplementation("org.springframework.boot:spring-boot-starter-security-test")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
+    testImplementation ("com.h2database:h2")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 

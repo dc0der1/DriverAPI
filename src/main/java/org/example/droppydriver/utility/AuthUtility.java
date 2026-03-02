@@ -8,15 +8,21 @@ import java.util.Objects;
 public class AuthUtility {
 
     public static String currentUser() {
-
         var auth = Objects.requireNonNull(SecurityContextHolder.getContext()).getAuthentication();
-        assert auth != null;
-        if (auth.getPrincipal() instanceof User userDetails) {
-            return userDetails.getEmail();
+        if (auth == null || !auth.isAuthenticated()) return null;
+
+        Object principal = auth.getPrincipal();
+
+        if (principal instanceof org.example.droppydriver.models.User user) {
+            return user.getEmail();
         }
 
-        return null;
+        if (principal instanceof org.springframework.security.core.userdetails.UserDetails userDetails) {
+            return userDetails.getUsername();
+        }
 
+        assert principal != null;
+        return principal.toString();
     }
 
 }

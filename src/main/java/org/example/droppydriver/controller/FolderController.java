@@ -44,10 +44,10 @@ public class FolderController {
         }
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getFolder(@PathVariable UUID id) {
+    @GetMapping
+    public ResponseEntity<?> getFolder(@RequestParam("Folder") String folderName) {
         try {
-            var folder = folderService.findFolderById(id);
+            var folder = folderService.findFolderByName(folderName);
             return ResponseEntity.ok(FolderResponse.fromModel(folder));
         } catch (NoSuchFolderException e) {
             return ResponseEntity
