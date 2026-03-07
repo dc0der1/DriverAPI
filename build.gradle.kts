@@ -27,6 +27,7 @@ repositories {
 dependencies {
     //implementation("org.springframework.boot:spring-boot-starter-jdbc")
     //implementation("org.springframework.boot:spring-boot-starter-restclient")
+    implementation("org.springframework.boot:spring-boot-starter-validation:4.1.0-M2")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.auth0:java-jwt:4.4.0")
     implementation("io.jsonwebtoken:jjwt-api:0.13.0")

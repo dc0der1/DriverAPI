@@ -4,13 +4,14 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.example.droppydriver.controller.FileController;
+import org.example.droppydriver.controllers.FileController;
 import org.example.droppydriver.models.FileModel;
 import org.springframework.hateoas.RepresentationModel;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
+import java.nio.file.NoSuchFileException;
 import java.util.UUID;
 
 @Getter

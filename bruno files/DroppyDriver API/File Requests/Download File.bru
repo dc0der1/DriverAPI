@@ -1,0 +1,20 @@
+meta {
+  name: Download File
+  type: http
+  seq: 2
+}
+
+get {
+  url: http://localhost:8080/api/file/download/Min CV.pdf
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJjYmE1N2FkMy0wMDYwLTQ2NWYtYjBjOC1mZmZiNjIwYjU2MDkiLCJyb2xlcyI6WyJST0xFX1VTRVIiXSwiaWF0IjoxNzcyNzA5Njk4LCJleHAiOjE3NzI3OTQyOTh9.dfAM0ntaTNQl7aphOthdKPhiEglM0x8UoNOeosXPfRdt9fGusjM9QGkzPu21XVfMfD1cBPlDihqY67NnVAJ0Kw
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}

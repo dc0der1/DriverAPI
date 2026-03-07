@@ -7,10 +7,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.example.droppydriver.models.User;
-import org.example.droppydriver.service.IJwtService;
-import org.example.droppydriver.service.IUserService;
-import org.example.droppydriver.service.JwtService;
+import org.example.droppydriver.services.IUserService;
+import org.example.droppydriver.services.JwtService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -89,11 +87,9 @@ public class CustomAuthenticationFilter extends OncePerRequestFilter {
             return;
         }
 
-        var user = optUser;
-
         SecurityContextHolder.getContext()
                 .setAuthentication(new UsernamePasswordAuthenticationToken(
-                        user, user.getPassword(), user.getAuthorities()
+                        optUser, optUser.getPassword(), optUser.getAuthorities()
                 ));
         filterChain.doFilter(request, response);
     }

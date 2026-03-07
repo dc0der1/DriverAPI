@@ -3,8 +3,8 @@ package org.example.droppydriver.dtos;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.Setter;
-import org.example.droppydriver.controller.UserController;
-import org.example.droppydriver.models.User;
+import org.example.droppydriver.controllers.UserController;
+import org.example.droppydriver.models.UserModel;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Date;
@@ -34,20 +34,20 @@ public class UserResponse extends RepresentationModel<@NonNull UserResponse> {
         this.folders = folders;
     }
 
-    public static UserResponse fromModel(User user) {
-        var response = new UserResponse(user.getId(),
-                user.getUsername(),
-                user.getCreatedAt(),
-                user.getEmail(),
-                user.getAge(),
-                user.getFolders()
+    public static UserResponse fromModel(UserModel userModel) {
+        var response = new UserResponse(userModel.getId(),
+                userModel.getUsername(),
+                userModel.getCreatedAt(),
+                userModel.getEmail(),
+                userModel.getAge(),
+                userModel.getFolderModels()
                         .stream()
                         .map(FolderResponse::fromModel)
                         .toList()
         );
 
         response.add(linkTo(
-                methodOn(UserController.class).getUserById(user.getId()))
+                methodOn(UserController.class).getUserById(userModel.getId()))
                 .withRel("user")
         );
 

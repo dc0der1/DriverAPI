@@ -1,8 +1,8 @@
 package org.example.droppydriver.dtos;
 
 import lombok.*;
-import org.example.droppydriver.controller.FolderController;
-import org.example.droppydriver.models.Folder;
+import org.example.droppydriver.controllers.FolderController;
+import org.example.droppydriver.models.FolderModel;
 import org.springframework.hateoas.RepresentationModel;
 
 import java.util.Date;
@@ -29,19 +29,19 @@ public class FolderResponse extends RepresentationModel<@NonNull FolderResponse>
         this.files = files;
     }
 
-    public static FolderResponse fromModel(Folder folder) {
+    public static FolderResponse fromModel(FolderModel folderModel) {
         var response = new FolderResponse(
-                folder.getId(),
-                folder.getName(),
-                folder.getCreatedAt(),
-                folder.getFiles()
+                folderModel.getId(),
+                folderModel.getName(),
+                folderModel.getCreatedAt(),
+                folderModel.getFiles()
                         .stream()
                         .map(FileResponse::fromModel)
                         .toList()
         );
 
         response.add(linkTo(
-                methodOn(FolderController.class).getFolder(folder.getName()))
+                methodOn(FolderController.class).getFolder(folderModel.getName()))
                 .withRel("folder")
         );
 

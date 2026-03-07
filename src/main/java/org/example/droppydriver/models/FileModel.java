@@ -28,9 +28,9 @@ public class FileModel {
     private byte[] data;
 
     @ManyToOne
-    private Folder folder;
+    private FolderModel folderModel;
 
     @ManyToOne
-    private User owner;
+    private UserModel owner;
 
 }

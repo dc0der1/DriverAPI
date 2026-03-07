@@ -7,9 +7,9 @@ import lombok.Getter;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
-import org.example.droppydriver.models.User;
-import org.example.droppydriver.service.IUserService;
-import org.example.droppydriver.service.JwtService;
+import org.example.droppydriver.models.UserModel;
+import org.example.droppydriver.services.IUserService;
+import org.example.droppydriver.services.JwtService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
@@ -45,11 +45,8 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
         var oidcProvider = oauth2Token.getAuthorizedClientRegistrationId();
         var oidcId = oauth2Token.getName();
 
-        System.out.println("Provider: "  + oidcProvider);
-        System.out.println("Id: " + oidcId);
-
         var user = userService.getUserByOidc(oidcId, oidcProvider);
-        System.out.println("User exists: " + user.isPresent());
+
         if (user.isEmpty()) {
             var createdUser = createUser(oidcId, oidcProvider, request, authentication);
             if (createdUser == null) {
@@ -66,7 +63,7 @@ public class OAuth2SuccessHandler implements AuthenticationSuccessHandler {
     }
 
     @Nullable
-    private User createUser(
+    private UserModel createUser(
             String oidcId,
             String oidcProvider,
             HttpServletRequest request,

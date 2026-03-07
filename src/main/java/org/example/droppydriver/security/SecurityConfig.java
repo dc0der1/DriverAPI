@@ -1,9 +1,7 @@
 package org.example.droppydriver.security;
 
-import org.example.droppydriver.repository.IUserRepository;
-import org.example.droppydriver.service.IJwtService;
-import org.example.droppydriver.service.JwtService;
-import org.example.droppydriver.service.UserService;
+import org.example.droppydriver.services.JwtService;
+import org.example.droppydriver.services.UserService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -15,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -33,9 +30,9 @@ public class SecurityConfig {
                         auth.successHandler(oAuth2SuccessHandler))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/error").permitAll()
-                        .requestMatchers("/droppydriver/user/register").permitAll()
-                        .requestMatchers("/droppydriver/user/login").permitAll()
-                        .requestMatchers("/droppydriver/user/all").hasRole("ADMIN")
+                        .requestMatchers("/api/user/register").permitAll()
+                        .requestMatchers("/api/user/login").permitAll()
+                        .requestMatchers("/api/user/all").hasRole("ADMIN")
                         .anyRequest().authenticated())
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
